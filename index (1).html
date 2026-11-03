@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agenda y seguimiento | Dra. Laura</title>
+<style>
+:root{--navy:#174b50;--sage:#dcece5;--mint:#eef6f1;--cream:#f7f8f4;--ink:#203236;--muted:#718184;--line:#e3e9e5;--amber:#fff0d5;--red:#fbe5e1;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);font:15px/1.45 Inter,system-ui,Arial;color:var(--ink)}
+header{background:var(--navy);color:white;padding:22px max(22px,calc((100% - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px}
+.brand{font-size:19px;font-weight:700}.sub{font-size:12px;opacity:.78}.wrap{max-width:1180px;margin:26px auto;padding:0 20px}
+.notice{background:#fff7e7;border:1px solid #f0dfb9;color:#775d2c;padding:11px 14px;border-radius:10px;margin-bottom:18px;font-size:13px}
+h1{font-size:25px;margin:0 0 4px}h2{font-size:17px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:20px 0}.stat,.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:17px}.stat strong{display:block;font-size:27px;color:var(--navy)}.stat span{font-size:13px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1.65fr 1fr;gap:16px}.panel{margin-bottom:16px}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}input,select{border:1px solid var(--line);border-radius:8px;padding:10px;background:white;color:var(--ink);font:inherit}input{flex:1;min-width:160px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--muted);font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:middle}tr:last-child td{border:0}
+.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:var(--mint);font-size:11px;font-weight:650;white-space:nowrap}.pending{background:var(--amber)}.danger{background:var(--red)}.gray{background:#edf0ef}
+button{border:0;border-radius:8px;padding:8px 10px;background:var(--navy);color:white;font-weight:600;cursor:pointer;font-size:12px}button.secondary{background:var(--sage);color:var(--navy)}button:focus,input:focus,select:focus{outline:2px solid #78a99a;outline-offset:2px}
+.actions{display:flex;gap:5px;flex-wrap:wrap}.follow{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.follow:last-child{border:0}.name{font-weight:650}.empty{padding:20px;text-align:center;color:var(--muted)}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.table-wrap{overflow:auto}header{align-items:flex-start;flex-direction:column}}
+</style></head>
+<body>
+<header><div><div class="brand">Dra. Laura <span style="font-weight:400">· Consultorio dental</span></div><div class="sub">Panel administrativo</div></div><div class="sub">Agenda y seguimiento</div></header>
+<main class="wrap">
+<div class="notice">Modo demostración: los nombres y citas son ficticios. Google Calendar y WhatsApp todavía no están conectados; las acciones se guardan solo en esta pantalla.</div>
+<h1>Agenda y seguimiento</h1><div class="muted">Revisa qué citas necesitan atención y a quién contactar.</div>
+<section class="stats">
+<div class="stat"><strong id="today">0</strong><span>Citas de hoy</span></div><div class="stat"><strong id="pending">0</strong><span>Pendientes de confirmar</span></div><div class="stat"><strong id="reschedule">0</strong><span>Solicitudes de cambio</span></div><div class="stat"><strong id="followCount">0</strong><span>Seguimientos pendientes</span></div>
+</section>
+<div class="layout"><section class="panel"><h2>Próximas citas</h2>
+<div class="toolbar"><input id="search" placeholder="Buscar paciente o ID…" aria-label="Buscar paciente o ID"><select id="filter" aria-label="Filtrar por estado"><option value="Todos">Todos los estados</option><option>Pendiente de confirmar</option><option>Confirmada</option><option>Reprogramar</option><option>Asistió</option><option>No asistió</option><option>Cancelada</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Paciente</th><th>Fecha y hora</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="appointments"></tbody></table></div></section>
+<aside class="panel"><h2>Contactar por seguimiento</h2><div class="muted" style="margin-top:-8px;margin-bottom:8px">Pacientes que necesitan coordinar una próxima sesión.</div><div id="followups"></div></aside></div>
+</main>
+<script>
+let appts=[
+{id:"P-104",name:"María López",date:"Hoy · 10:00",state:"Pendiente de confirmar"},
+{id:"P-108",name:"Carlos Méndez",date:"Hoy · 11:30",state:"Confirmada"},
+{id:"P-112",name:"Ana García",date:"Hoy · 14:00",state:"Reprogramar"},
+{id:"P-117",name:"Luis Pérez",date:"Mañana · 09:00",state:"Pendiente de confirmar"},
+{id:"P-121",name:"Sofía Ruiz",date:"Mañana · 10:30",state:"Confirmada"},
+{id:"P-125",name:"Diego Morales",date:"Viernes · 15:00",state:"Cancelada"}];
+let followups=[{id:"P-130",name:"Elena Torres",detail:"Próxima sesión pendiente",contacted:false},{id:"P-134",name:"Jorge Castillo",detail:"Coordinar siguiente visita",contacted:false},{id:"P-139",name:"Paula Díaz",detail:"Contactada hoy",contacted:true}];
+const $=id=>document.getElementById(id);
+function pill(s){let c=s==="No asistió"?"danger":s==="Pendiente de confirmar"||s==="Reprogramar"?"pending":s==="Cancelada"?"gray":"";return `<span class="pill ${c}">${s}</span>`}
+function render(){
+$("today").textContent=appts.filter(a=>a.date.startsWith("Hoy")).length;
+$("pending").textContent=appts.filter(a=>a.state==="Pendiente de confirmar").length;
+$("reschedule").textContent=appts.filter(a=>a.state==="Reprogramar").length;
+$("followCount").textContent=followups.filter(f=>!f.contacted).length;
+let q=$("search").value.toLowerCase(),f=$("filter").value;
+let rows=appts.filter(a=>(f==="Todos"||a.state===f)&&(a.name.toLowerCase().includes(q)||a.id.toLowerCase().includes(q)));
+$("appointments").innerHTML=rows.map(a=>`<tr><td><b>${a.name}</b><br><span class="muted">${a.id}</span></td><td>${a.date}</td><td>${pill(a.state)}</td><td><div class="actions">${a.state==="Pendiente de confirmar"?`<button onclick="setState('${a.id}','Confirmada')">Confirmar</button><button class="secondary" onclick="setState('${a.id}','Reprogramar')">Reprogramar</button>`:a.state==="Confirmada"?`<button class="secondary" onclick="setState('${a.id}','Asistió')">Asistió</button><button class="secondary" onclick="setState('${a.id}','No asistió')">No asistió</button>`:`<button class="secondary" onclick="setState('${a.id}','Pendiente de confirmar')">Reabrir</button>`}</div></td></tr>`).join("")||`<tr><td colspan="4" class="empty">No hay citas que coincidan.</td></tr>`;
+$("followups").innerHTML=followups.map(x=>`<div class="follow"><div><div class="name">${x.name}</div><div class="muted">${x.id} · ${x.detail}</div>${x.contacted?pill("Contactado"):pill("Pendiente")}</div>${!x.contacted?`<button onclick="contact('${x.id}')">Marcar contactado</button>`:""}</div>`).join("");
+}
+function setState(id,state){appts=appts.map(a=>a.id===id?{...a,state}:a);render()}
+function contact(id){followups=followups.map(f=>f.id===id?{...f,contacted:true,detail:"Contactada hoy"}:f);render()}
+$("search").addEventListener("input",render);$("filter").addEventListener("change",render);render();
+</script></body></html>
