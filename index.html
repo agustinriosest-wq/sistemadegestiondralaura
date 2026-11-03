@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#0e7490">
+  <title>Agenda y seguimiento | Dra. Laura</title>
+  <style>
+    :root {
+      --primary: #0e7490;
+      --primary-hover: #155e75;
+      --secondary: #06b6d4;
+      --background: #f8fafc;
+      --surface: #fff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --danger: #b42318;
+      --danger-bg: #fef2f2;
+      --success: #166534;
+      --success-bg: #f0fdf4;
+      --soft-cyan: #ecfeff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px max(22px, calc((100% - 1180px) / 2));
+      background: var(--primary);
+      color: var(--surface);
+      box-shadow: 0 3px 12px rgb(15 23 42 / 12%);
+    }
+
+    .brand {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    header .sub {
+      color: rgb(255 255 255 / 82%);
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 28px auto;
+      padding: 0 20px;
+    }
+
+    .notice {
+      margin-bottom: 22px;
+      padding: 12px 16px;
+      border: 1px solid #fcd34d;
+      border-left: 4px solid var(--warning);
+      border-radius: 10px;
+      background: var(--warning-bg);
+      color: #854d0e;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      color: var(--primary);
+      font-size: 27px;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 650;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 22px 0;
+    }
+
+    .stat,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 2px 8px rgb(15 23 42 / 4%);
+    }
+
+    .stat {
+      padding: 17px 18px;
+      border-top: 3px solid var(--secondary);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--primary);
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      margin-bottom: 16px;
+      padding: 19px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    input,
+    select {
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    input {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    button:focus-visible {
+      outline: 3px solid rgb(6 182 212 / 45%);
+      outline-offset: 2px;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--secondary);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 600;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 13px 8px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 20px;
+      background: var(--success-bg);
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .pending {
+      background: var(--warning-bg);
+      color: #854d0e;
+    }
+
+    .danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .gray {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    button {
+      min-height: 40px;
+      padding: 9px 13px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: var(--primary);
+      color: var(--surface);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.25;
+      transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 3px 8px rgb(14 116 144 / 20%);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      box-shadow: none;
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      border-color: #a5e3ec;
+      background: var(--soft-cyan);
+      color: var(--primary);
+    }
+
+    button.secondary:hover {
+      border-color: var(--secondary);
+      background: #cffafe;
+      box-shadow: 0 3px 8px rgb(6 182 212 / 14%);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .follow {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .follow:last-child {
+      border-bottom: 0;
+    }
+
+    .name {
+      margin-bottom: 2px;
+      font-weight: 650;
+    }
+
+    .empty {
+      padding: 22px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .wrap {
+        margin: 20px auto;
+        padding: 0 14px;
+      }
+
+      .stats {
+        gap: 9px;
+      }
+
+      .stat,
+      .panel {
+        padding: 14px;
+      }
+
+      .follow {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .follow button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand">Dra. Laura <span style="font-weight: 400">· Consultorio dental</span></div>
+      <div class="sub">Panel administrativo</div>
+    </div>
+    <div class="sub">Agenda y seguimiento</div>
+  </header>
+  <main class="wrap">
+    <div class="notice" role="status">Versión de demostración: los pacientes son ficticios y los cambios solo se guardan en esta pantalla. No ingreses datos reales. Google Calendar y WhatsApp todavía no están conectados.</div>
+    <h1>Agenda y seguimiento</h1>
+    <div class="sub">Revisa qué citas necesitan atención y a quién contactar.</div>
+    <section class="stats">
+      <div class="stat"><strong id="today">0</strong><span>Citas de hoy</span></div>
+      <div class="stat"><strong id="pending">0</strong><span>Pendientes de confirmar</span></div>
+      <div class="stat"><strong id="reschedule">0</strong><span>Solicitudes de cambio</span></div>
+      <div class="stat"><strong id="followCount">0</strong><span>Seguimientos pendientes</span></div>
+    </section>
+    <div class="layout">
+      <section class="panel">
+        <h2>Próximas citas</h2>
+        <div class="toolbar">
+          <input id="search" placeholder="Buscar paciente o ID…" aria-label="Buscar paciente o ID">
+          <select id="filter" aria-label="Filtrar por estado">
+            <option value="Todos">Todos los estados</option>
+            <option>Pendiente de confirmar</option>
+            <option>Confirmada</option>
+            <option>Reprogramar</option>
+            <option>Asistió</option>
+            <option>No asistió</option>
+            <option>Cancelada</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Paciente</th><th>Fecha y hora</th><th>Estado</th><th>Acción</th></tr>
+            </thead>
+            <tbody id="appointments"></tbody>
+          </table>
+        </div>
+      </section>
+      <aside class="panel">
+        <h2>Contactar por seguimiento</h2>
+        <div class="sub" style="margin-top: -8px; margin-bottom: 8px">Pacientes que necesitan coordinar una próxima sesión.</div>
+        <div id="followups"></div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    let appts = [
+      {id: "P-104", name: "María López", date: "Hoy · 10:00", state: "Pendiente de confirmar"},
+      {id: "P-108", name: "Carlos Méndez", date: "Hoy · 11:30", state: "Confirmada"},
+      {id: "P-112", name: "Ana García", date: "Hoy · 14:00", state: "Reprogramar"},
+      {id: "P-117", name: "Luis Pérez", date: "Mañana · 09:00", state: "Pendiente de confirmar"},
+      {id: "P-121", name: "Sofía Ruiz", date: "Mañana · 10:30", state: "Confirmada"},
+      {id: "P-125", name: "Diego Morales", date: "Viernes · 15:00", state: "Cancelada"}
+    ];
+    let followups = [
+      {id: "P-130", name: "Elena Torres", detail: "Próxima sesión pendiente", contacted: false},
+      {id: "P-134", name: "Jorge Castillo", detail: "Coordinar siguiente visita", contacted: false},
+      {id: "P-139", name: "Paula Díaz", detail: "Contactada hoy", contacted: true}
+    ];
+    const $ = id => document.getElementById(id);
+
+    function pill(state) {
+      let className = state === "No asistió"
+        ? "danger"
+        : state === "Pendiente de confirmar" || state === "Reprogramar"
+          ? "pending"
+          : state === "Cancelada"
+            ? "gray"
+            : "";
+      return `<span class="pill ${className}">${state}</span>`;
+    }
+
+    function render() {
+      $("today").textContent = appts.filter(a => a.date.startsWith("Hoy")).length;
+      $("pending").textContent = appts.filter(a => a.state === "Pendiente de confirmar").length;
+      $("reschedule").textContent = appts.filter(a => a.state === "Reprogramar").length;
+      $("followCount").textContent = followups.filter(f => !f.contacted).length;
+
+      let query = $("search").value.toLowerCase();
+      let filter = $("filter").value;
+      let rows = appts.filter(a =>
+        (filter === "Todos" || a.state === filter) &&
+        (a.name.toLowerCase().includes(query) || a.id.toLowerCase().includes(query))
+      );
+
+      $("appointments").innerHTML = rows.map(a => `<tr>
+        <td><b>${a.name}</b><br><span class="sub">${a.id}</span></td>
+        <td>${a.date}</td>
+        <td>${pill(a.state)}</td>
+        <td><div class="actions">${
+          a.state === "Pendiente de confirmar"
+            ? `<button type="button" onclick="setState('${a.id}', 'Confirmada')">Confirmar</button><button type="button" class="secondary" onclick="setState('${a.id}', 'Reprogramar')">Reprogramar</button>`
+            : a.state === "Confirmada"
+              ? `<button type="button" class="secondary" onclick="setState('${a.id}', 'Asistió')">Asistió</button><button type="button" class="secondary" onclick="setState('${a.id}', 'No asistió')">No asistió</button>`
+              : `<button type="button" class="secondary" onclick="setState('${a.id}', 'Pendiente de confirmar')">Reabrir</button>`
+        }</div></td>
+      </tr>`).join("") || `<tr><td colspan="4" class="empty">No hay citas que coincidan.</td></tr>`;
+
+      $("followups").innerHTML = followups.map(item => `<div class="follow">
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="sub">${item.id} · ${item.detail}</div>
+          ${item.contacted ? pill("Contactado") : pill("Pendiente")}
+        </div>
+        ${!item.contacted ? `<button type="button" onclick="contact('${item.id}')">Marcar contactado</button>` : ""}
+      </div>`).join("");
+    }
+
+    function setState(id, state) {
+      appts = appts.map(appointment => appointment.id === id ? {...appointment, state} : appointment);
+      render();
+    }
+
+    function contact(id) {
+      followups = followups.map(item =>
+        item.id === id ? {...item, contacted: true, detail: "Contactada hoy"} : item
+      );
+      render();
+    }
+
+    $("search").addEventListener("input", render);
+    $("filter").addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>
